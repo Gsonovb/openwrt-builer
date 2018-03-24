@@ -1,11 +1,11 @@
-FROM ubuntu:xenial
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -qq update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -yqq sudo git-core subversion build-essential gcc-multilib ccache quilt \
-                       libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python vim libssl-dev && \
-    apt-get clean && \
-    useradd -m openwrt && \
-    echo 'openwrt ALL=NOPASSWD: ALL' > /etc/sudoers.d/openwrt
+FROM guanyc/openwrt-builer
 USER openwrt
-
-WORKDIR /home/openwrt/
+RUN cd /home/openwrt && \
+    wget http://downloads.lede-project.org/releases/17.01.4/targets/ramips/mt7620/lede-sdk-17.01.4-ramips-mt7620_gcc-5.4.0_musl-1.1.16.Linux-x86_64.tar.xz -o imagebuiler.tar.xz &&\
+    tar xvJf imagebuiler.tar.gz && \
+    rm -f imagebuiler.tar.gz &&\
+    mv lede-s* imagebuilder && \
+    cd imagebuilder && \
+    ./scripts/feeds update && \
+    rm -rf tmp
+WORKDIR /home/openwrt/imagebuilder
